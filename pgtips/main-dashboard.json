@@ -3076,7 +3076,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customEvents\r\n| where name == \"configuration.monitoredservers.test.v2\"\r\n| where user_Id ==\"Ozkan.Pakdil\"\r\n//| where customDimensions[\"DeveloperMode\"] == true\r\n| where customDimensions[\"entityType\"] == \"PostgresInstance\"\r\n| extend testResultsKeys = bag_keys(customDimensions)\r\n| where array_length(array_slice(testResultsKeys, 0, array_length(testResultsKeys))) > 0\r\n| mv-apply bagItem = bag_keys(customDimensions) to typeof(string) on (\r\n    where bagItem startswith \"testResults.\" and bagItem !contains \" \" and bagItem !contains \"EntityTestCaseResult\"\r\n    | extend TestName = replace_string(bagItem, \"testResults.\", \"\")\r\n    | extend Success = tobool(customDimensions[bagItem])\r\n    | project TestName, Success\r\n)\r\n| where isnotempty(TestName) and isnotnull(Success)\r\n| summarize Count = count() by TestName, Success\r\n| evaluate pivot(Success, sum(Count))\r\n| render columnchart by TestName",
+            "query": "customEvents\r\n| where name == \"configuration.monitoredservers.test.v2\"\r\n//| where customDimensions[\"DeveloperMode\"] == true\r\n| where customDimensions[\"entityType\"] == \"PostgresInstance\"\r\n| extend testResultsKeys = bag_keys(customDimensions)\r\n| where array_length(array_slice(testResultsKeys, 0, array_length(testResultsKeys))) > 0\r\n| mv-apply bagItem = bag_keys(customDimensions) to typeof(string) on (\r\n    where bagItem startswith \"testResults.\" and bagItem !contains \" \" and bagItem !contains \"EntityTestCaseResult\"\r\n    | extend TestName = replace_string(bagItem, \"testResults.\", \"\")\r\n    | extend Success = tobool(customDimensions[bagItem])\r\n    | project TestName, Success\r\n)\r\n| where isnotempty(TestName) and isnotnull(Success)\r\n| summarize Count = count() by TestName, Success\r\n| evaluate pivot(Success, sum(Count))\r\n| render columnchart by TestName",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -3110,6 +3110,6 @@
   "timezone": "browser",
   "title": "pgTips",
   "uid": "eekl0ndod8vswc",
-  "version": 63,
+  "version": 64,
   "weekStart": ""
 }
