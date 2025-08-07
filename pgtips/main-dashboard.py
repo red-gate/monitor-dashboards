@@ -1,5 +1,5 @@
 from grafana_foundation_sdk.builders.dashboard import Dashboard, Row, ThresholdsConfig
-from grafana_foundation_sdk.builders import azuremonitor, timeseries, stat
+from grafana_foundation_sdk.builders import azuremonitor, timeseries, stat, common
 from grafana_foundation_sdk.cog.encoder import JSONEncoder
 from grafana_foundation_sdk.models.common import TimeZoneBrowser
 from grafana_foundation_sdk.models import units
@@ -31,61 +31,63 @@ def build_dashboard() -> Dashboard:
         .timezone(TimeZoneBrowser)
         .with_row(
             Row("North Star")
-            .collapsed(True)
-            .with_panel(
-                timeseries.Panel()
-                .title("Number of monitored PostgreSQL instances and base monitors with a PostgreSQL instance")
-                .min(0)
-                .datasource(datasource)
-                .with_target(
-                    build_azure_query(
-                        datasource,
-                        '''customEvents
-                        | where name == "monitoredentities.report"
-                        | where customDimensions["DeveloperMode"] != true
-                        | where timestamp < endofday(ago(1d))
-                        | summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions["postgresInstances"])) by user_Id, bin(timestamp, 1d)
-                        | where numPostgresInstances > 0
-                        | summarize
-                            total_postgres_instances=sum(numPostgresInstances),
-                            base_monitor_count=dcount(user_Id)
-                            by bin(timestamp, 1d)
-                        '''
-                    )
+        )
+        .with_panel(
+            timeseries.Panel()
+            .title("Number of monitored PostgreSQL instances and base monitors with a PostgreSQL instance")
+            .min(0)
+            .datasource(datasource)
+            .with_target(
+                build_azure_query(
+                    datasource,
+                    '''customEvents
+                    | where name == "monitoredentities.report"
+                    | where customDimensions["DeveloperMode"] != true
+                    | where timestamp < endofday(ago(1d))
+                    | summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions["postgresInstances"])) by user_Id, bin(timestamp, 1d)
+                    | where numPostgresInstances > 0
+                    | summarize
+                        total_postgres_instances=sum(numPostgresInstances),
+                        base_monitor_count=dcount(user_Id)
+                        by bin(timestamp, 1d)
+                    '''
                 )
             )
-            .with_panel(
-                stat.Panel()
-                .title("Monitored PostgreSQL Instances")
-                .datasource(datasource)
-                .with_target(
-                    build_azure_query(
-                        datasource,
-                        '''customEvents
-                        | where name == "monitoredentities.report"
-                        | where customDimensions["DeveloperMode"] != true
-                        | where timestamp < endofday(ago(1d))
-                        | summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions["postgresInstances"])) by user_Id, bin(timestamp, 1d)
-                        | where numPostgresInstances > 0
-                        | summarize
-                            sum(numPostgresInstances)
-                            by day=bin(timestamp, 1d)
-                        | order by day
-                        '''
-                    )
+        )
+        .with_panel(
+            stat.Panel()
+            .title("Monitored PostgreSQL Instances")
+            .datasource(datasource)
+            .with_target(
+                build_azure_query(
+                    datasource,
+                    '''customEvents
+                    | where name == "monitoredentities.report"
+                    | where customDimensions["DeveloperMode"] != true
+                    | where timestamp < endofday(ago(1d))
+                    | summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions["postgresInstances"])) by user_Id, bin(timestamp, 1d)
+                    | where numPostgresInstances > 0
+                    | summarize
+                        sum(numPostgresInstances)
+                        by day=bin(timestamp, 1d)
+                    | order by day
+                    '''
                 )
-                .color_mode("value")
-                .graph_mode("none")
-                .text_mode("value")
-                .thresholds(
-                    ThresholdsConfig()
-                    .mode(ThresholdsMode.ABSOLUTE)
-                    .steps(
-                        [
-                            Threshold(None, "green"),
-                            Threshold(80, "red")
-                        ]
-                    )
+            )
+            .color_mode("value")
+            .graph_mode("none")
+            .text_mode("value")
+            .reduce_options(
+                common.ReduceDataOptions()
+                .calcs(["firstNotNull"])
+            )
+            .thresholds(
+                ThresholdsConfig()
+                .mode(ThresholdsMode.ABSOLUTE)
+                .steps(
+                    [
+                        Threshold(None, "green")
+                    ]
                 )
             )
         )
