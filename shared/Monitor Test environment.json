@@ -1,0 +1,951 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "The 'sqm-netcore-*' servers",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 142,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "panels": [],
+      "title": "Admin Webserver (Read+Write)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sqm-netcore-adm_devcloud_red-gate_com"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-adm_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-adm - CPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sqm-netcore-adm_devcloud_red-gate_com"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-adm_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-adm - Memory",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Additional Base Monitor (R+W site only)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sqm-netcore-bm1_devcloud_red-gate_com"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-bm1_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-bm1 - CPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 12,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sqm-netcore-bm1_devcloud_red-gate_com"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-bm1_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-bm1 - Memory",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Readonly Webserver",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-web_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-web - CPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 12,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sqm-netcore-web_devcloud_red-gate_com"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-web_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-web - Memory",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Additional Base Monitor (RO site only)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-bm2_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-bm2 - CPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "graphite",
+        "uid": "000000001"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 12,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sqm-netcore-bm2_devcloud_red-gate_com"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "000000001"
+          },
+          "refId": "A",
+          "target": "aliasByNode(icinga2.sqm-netcore-bm2_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
+        }
+      ],
+      "title": "sqm-netcore-bm2 - Memory",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6M",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Monitor Test environment",
+  "uid": "ceec7wig7rytca",
+  "version": 7,
+  "weekStart": ""
+}
