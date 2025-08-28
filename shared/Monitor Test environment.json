@@ -40,6 +40,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -142,7 +143,7 @@
           "target": "aliasByNode(icinga2.sqm-netcore-adm_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
         }
       ],
-      "title": "sqm-netcore-adm - CPU",
+      "title": "sqm-netcore-adm - Host CPU",
       "type": "timeseries"
     },
     {
@@ -150,6 +151,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -254,7 +256,132 @@
           "target": "aliasByNode(icinga2.sqm-netcore-adm_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
         }
       ],
-      "title": "sqm-netcore-adm - Memory",
+      "title": "sqm-netcore-adm - Host Memory",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "process.memory.usage",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 11,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-ADM"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n| where name == \"process.memory.usage\"\r\n| where instance=cloud_RoleInstance in (\"SQM-NETCORE-ADM\")\r\n| project timestamp, name=cloud_RoleInstance, value\r\n| order by timestamp asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Admin Website Process Memory Usage",
       "type": "timeseries"
     },
     {
@@ -263,7 +390,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 17
       },
       "id": 11,
       "panels": [],
@@ -275,6 +402,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -350,7 +478,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 18
       },
       "id": 1,
       "options": {
@@ -377,7 +505,7 @@
           "target": "aliasByNode(icinga2.sqm-netcore-bm1_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
         }
       ],
-      "title": "sqm-netcore-bm1 - CPU",
+      "title": "sqm-netcore-bm1 - Host CPU",
       "type": "timeseries"
     },
     {
@@ -385,6 +513,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -462,7 +591,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 18
       },
       "id": 7,
       "options": {
@@ -489,7 +618,162 @@
           "target": "aliasByNode(icinga2.sqm-netcore-bm1_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
         }
       ],
-      "title": "sqm-netcore-bm1 - Memory",
+      "title": "sqm-netcore-bm1 - Host Memory",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "process.memory.usage",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EC2AMAZ-L4FVIBT"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQLMONITOR-BM1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQLMONITOR-TEST"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n| where name == \"process.memory.usage\"\r\n| where instance=cloud_RoleInstance in (\"SQLMONITOR-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM1\", \"EC2AMAZ-L4FVIBT\")\r\n| project timestamp, name=cloud_RoleInstance, value\r\n| order by timestamp asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Admin Base Monitor Process Memory Usage",
       "type": "timeseries"
     },
     {
@@ -498,7 +782,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 34
       },
       "id": 10,
       "panels": [],
@@ -510,6 +794,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -569,7 +854,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 35
       },
       "id": 2,
       "options": {
@@ -596,7 +881,7 @@
           "target": "aliasByNode(icinga2.sqm-netcore-web_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
         }
       ],
-      "title": "sqm-netcore-web - CPU",
+      "title": "sqm-netcore-web - Host CPU",
       "type": "timeseries"
     },
     {
@@ -604,6 +889,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -681,7 +967,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 19
+        "y": 35
       },
       "id": 6,
       "options": {
@@ -708,7 +994,147 @@
           "target": "aliasByNode(icinga2.sqm-netcore-web_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
         }
       ],
-      "title": "sqm-netcore-web - Memory",
+      "title": "sqm-netcore-web - Host Memory",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "process.memory.usage",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 11,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-ADM"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-WEB"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 43
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n| where name == \"process.memory.usage\"\r\n| where instance=cloud_RoleInstance in (\"SQM-NETCORE-WEB\")\r\n| project timestamp, name=cloud_RoleInstance, value\r\n| order by timestamp asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Readonly Website Process Memory Usage",
       "type": "timeseries"
     },
     {
@@ -717,7 +1143,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 51
       },
       "id": 12,
       "panels": [],
@@ -729,6 +1155,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -788,7 +1215,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 52
       },
       "id": 3,
       "options": {
@@ -815,7 +1242,7 @@
           "target": "aliasByNode(icinga2.sqm-netcore-bm2_devcloud_red-gate_com.services.Windows_Load.load-windows.perfdata.load.value, 1)"
         }
       ],
-      "title": "sqm-netcore-bm2 - CPU",
+      "title": "sqm-netcore-bm2 - Host CPU",
       "type": "timeseries"
     },
     {
@@ -823,6 +1250,7 @@
         "type": "graphite",
         "uid": "000000001"
       },
+      "description": "From Icinga",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -900,7 +1328,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 52
       },
       "id": 8,
       "options": {
@@ -927,8 +1355,896 @@
           "target": "aliasByNode(icinga2.sqm-netcore-bm2_devcloud_red-gate_com.services.memory-windows.memory-windows.perfdata.memory.value, 1)"
         }
       ],
-      "title": "sqm-netcore-bm2 - Memory",
+      "title": "sqm-netcore-bm2 - Host Memory",
       "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 12,
+        "x": 0,
+        "y": 60
+      },
+      "id": 21,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "Base Monitors on **SQLMONITOR-TEST** and **SQM-NETCORE-BM1** are shared between Admin site and Readonly Site.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.5.2",
+      "title": "",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "process.memory.usage",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 60
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n| where name == \"process.memory.usage\"\r\n| where instance=cloud_RoleInstance in (\"SQLMONITOR-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM2\")\r\n| project timestamp, name=cloud_RoleInstance, value\r\n| order by timestamp asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Readonly Base Monitor Process Memory Usage",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 68
+      },
+      "id": 15,
+      "panels": [],
+      "title": "In progress",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "This visualization is not working, yet",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 69
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n| where name == \"dotnet.process.cpu.time\"\r\n| where cloud_RoleInstance in (\"SQLMONITOR-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM2\")\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n// We sometimes get multiple values for the same instant - not sure but assuming they should be summed\r\n// Maybe something to do with multiple CPUs or similar?\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),100) // clamp values to avoid too much noise from outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n//\r\n",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU time [ Work In Progress ]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "This visualization is not working, yet",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQLMONITOR-TEST"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-BM1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EC2AMAZ-L4FVIBT"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-BM2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 69
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n| where name == \"dotnet.process.cpu.time\"\r\n| where cloud_RoleInstance in (\"SQM-NETCORE-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM2\", \"EC2AMAZ-L4FVIBT\")\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n// We sometimes get multiple values for the same instant - not sure but assuming they should be summed\r\n// Maybe something to do with multiple CPUs or similar?\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),100) // clamp values to avoid too much noise from outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n//\r\n",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU time [ Work In Progress ]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "This visualization is not working, yet",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lock Contention"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU Time"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 77
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "let lockContention = customMetrics\r\n//| where name == \"dotnet.thread_pool.work_item.count\"\r\n| where name == \"dotnet.monitor.lock_contentions\"\r\n| where cloud_RoleInstance in (\"SQLMONITOR-TEST\")\r\n//| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n    )\r\n| project moment, name=\"Lock Contention\", delta\r\n| order by moment asc;\r\nlet cpuUsage = customMetrics\r\n//| where name == \"dotnet.thread_pool.work_item.count\"\r\n| where name == \"dotnet.process.cpu.time\"\r\n| where cloud_RoleInstance in (\"SQLMONITOR-TEST\")\r\n//| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n    )\r\n| project moment, name=\"CPU Time\", delta\r\n| order by moment asc;\r\n// let memoryUse = customMetrics\r\n// | where name == \"process.memory.usage\"\r\n// | where instance=cloud_RoleInstance in (\"SQLMONITOR-TEST\")\r\n// | project moment=timestamp, name=\"Memory Use\", delta=value\r\n// | order by moment asc;\r\nlockContention\r\n| union cpuUsage\r\n// | union memoryUse\r\n| order by moment asc\r\n// | take 100 ",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        },
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "// let lockContention = customMetrics\r\n// //| where name == \"dotnet.thread_pool.work_item.count\"\r\n// | where name == \"dotnet.monitor.lock_contentions\"\r\n// | where cloud_RoleInstance in (\"SQLMONITOR-TEST\")\r\n// //| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n// | project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n// | summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n// | partition by cloud_RoleInstance ( \r\n//     sort by moment asc \r\n//     | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n//     )\r\n// | project moment, name=\"Lock Contention\", delta\r\n// | order by moment asc;\r\n// let cpuUsage = customMetrics\r\n// //| where name == \"dotnet.thread_pool.work_item.count\"\r\n// | where name == \"dotnet.process.cpu.time\"\r\n// | where cloud_RoleInstance in (\"SQLMONITOR-TEST\")\r\n// //| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n// | project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n// | summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n// | partition by cloud_RoleInstance ( \r\n//     sort by moment asc \r\n//     | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n//     )\r\n// | project moment, name=\"CPU Time\", delta\r\n// | order by moment asc;\r\nlet memoryUse = customMetrics\r\n| where name == \"process.memory.usage\"\r\n| where instance=cloud_RoleInstance in (\"SQLMONITOR-TEST\")\r\n| project moment=timestamp, name=\"Memory Use\", delta=value\r\n| order by moment asc;\r\nmemoryUse\r\n| order by moment asc\r\n// | take 100 ",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "hide": false,
+          "queryType": "Azure Log Analytics",
+          "refId": "B"
+        }
+      ],
+      "title": "SQLMONITOR-TEST [ Work In Progress ]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "This visualization is not working, yet\ndotnet.monitor.lock_contentions",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQLMONITOR-TEST"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-BM1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EC2AMAZ-L4FVIBT"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SQM-NETCORE-BM2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 77
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customMetrics\r\n//| where name == \"dotnet.thread_pool.work_item.count\"\r\n| where name == \"dotnet.monitor.lock_contentions\"\r\n| where cloud_RoleInstance in (\"SQM-NETCORE-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM2\", \"EC2AMAZ-L4FVIBT\")\r\n//| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n// | take 100 ",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Lock contentions [ Work In Progress ]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "This visualization is not working, yet",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.name}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GET"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DELETE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 85
+      },
+      "id": 23,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "// Grafana does not seem to like this query very much. Something wrong with the time range?!? \r\n// But also the data is weird - seem to get lots of duplicates for long periods of time, leadning to strange plateauing graphs?!?\r\ncustomMetrics\r\n| where cloud_RoleInstance == \"SQM-NETCORE-ADM\"\r\n| where name == \"http.server.request.duration\"\r\n| where timestamp > ago(12h) // in here because of Grafana time-range weirdness\r\n| summarize maxDuration=percentile(value, 95) by minute=bin(timestamp, 10m), name=tostring(customDimensions[\"http.request.method\"])\r\n| order by minute asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "SQM-NETCORE-ADM [ Work In Progress ]",
+      "type": "barchart"
     }
   ],
   "preload": false,
@@ -939,13 +2255,13 @@
     "list": []
   },
   "time": {
-    "from": "now-6M",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Monitor Test environment",
   "uid": "ceec7wig7rytca",
-  "version": 7,
+  "version": 21,
   "weekStart": ""
 }
