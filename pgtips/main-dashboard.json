@@ -520,12 +520,133 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "DAU / MAU. Activity Engagement using Azure's built-in function for UserIds over a rolling 30d window. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.version}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "activity_ratio"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customEvents\r\n| where name == \"serveroverview.viewed\"\r\n| where customDimensions !has \"payload.DeveloperMode\"\r\n| where customDimensions[\"payload.serverType\"]==\"PostgresServer\"\r\n| where timestamp > ago(90d)\r\n| evaluate activity_engagement(user_Id, timestamp, ago(90d), ago(1d), 1d, 30d)\r\n| project timestamp, activity_ratio\r\n| where timestamp > ago(60d)\r\n| order by timestamp asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/RG-Insights-Production/providers/microsoft.insights/components/RG-Insights-Production"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Stickiness ",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 26
       },
       "id": 5,
       "panels": [],
@@ -581,8 +702,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -628,7 +748,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 19
+        "y": 27
       },
       "id": 4,
       "options": {
@@ -715,8 +835,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -792,7 +911,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 19
+        "y": 27
       },
       "id": 35,
       "options": {
@@ -887,8 +1006,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -903,7 +1021,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 19
+        "y": 27
       },
       "id": 3,
       "options": {
@@ -998,7 +1116,7 @@
         "h": 10,
         "w": 5,
         "x": 0,
-        "y": 27
+        "y": 35
       },
       "id": 20,
       "options": {
@@ -1134,7 +1252,7 @@
         "h": 10,
         "w": 5,
         "x": 5,
-        "y": 27
+        "y": 35
       },
       "id": 11,
       "options": {
@@ -1234,8 +1352,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1305,7 +1422,7 @@
         "h": 10,
         "w": 14,
         "x": 10,
-        "y": 27
+        "y": 35
       },
       "id": 13,
       "options": {
@@ -1381,8 +1498,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1424,7 +1540,7 @@
         "h": 10,
         "w": 8,
         "x": 0,
-        "y": 37
+        "y": 45
       },
       "id": 22,
       "options": {
@@ -1533,8 +1649,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1595,7 +1710,7 @@
         "h": 10,
         "w": 8,
         "x": 8,
-        "y": 37
+        "y": 45
       },
       "id": 12,
       "options": {
@@ -1691,8 +1806,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1753,7 +1867,7 @@
         "h": 10,
         "w": 8,
         "x": 16,
-        "y": 37
+        "y": 45
       },
       "id": 26,
       "options": {
@@ -1836,8 +1950,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1868,7 +1981,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 47
+        "y": 55
       },
       "id": 37,
       "options": {
@@ -1964,8 +2077,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2026,7 +2138,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 47
+        "y": 55
       },
       "id": 38,
       "options": {
@@ -2070,7 +2182,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 63
       },
       "id": 14,
       "panels": [],
@@ -2127,8 +2239,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2144,7 +2255,7 @@
         "h": 14,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 64
       },
       "id": 1,
       "options": {
@@ -2260,8 +2371,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2277,7 +2387,7 @@
         "h": 14,
         "w": 12,
         "x": 12,
-        "y": 56
+        "y": 64
       },
       "id": 9,
       "options": {
@@ -2349,7 +2459,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 70
+        "y": 78
       },
       "id": 19,
       "panels": [],
@@ -2488,7 +2598,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 71
+        "y": 79
       },
       "id": 23,
       "options": {
@@ -2549,8 +2659,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2585,7 +2694,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 71
+        "y": 79
       },
       "id": 16,
       "options": {
@@ -2664,8 +2773,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2696,7 +2804,7 @@
         "h": 8,
         "w": 7,
         "x": 12,
-        "y": 71
+        "y": 79
       },
       "id": 17,
       "options": {
@@ -2759,8 +2867,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2791,7 +2898,7 @@
         "h": 8,
         "w": 5,
         "x": 19,
-        "y": 71
+        "y": 79
       },
       "id": 18,
       "options": {
@@ -2870,8 +2977,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2902,7 +3008,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 79
+        "y": 87
       },
       "id": 24,
       "options": {
@@ -3000,8 +3106,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3016,7 +3121,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 79
+        "y": 87
       },
       "id": 36,
       "options": {
@@ -3104,8 +3209,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3149,7 +3253,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 79
+        "y": 87
       },
       "id": 39,
       "options": {
@@ -3193,7 +3297,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 87
+        "y": 95
       },
       "id": 29,
       "panels": [],
@@ -3265,7 +3369,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 88
+        "y": 96
       },
       "id": 28,
       "options": {
@@ -3380,7 +3484,7 @@
         "h": 9,
         "w": 7,
         "x": 7,
-        "y": 88
+        "y": 96
       },
       "id": 31,
       "options": {
@@ -3468,8 +3572,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -3496,7 +3599,7 @@
         "h": 10,
         "w": 10,
         "x": 14,
-        "y": 88
+        "y": 96
       },
       "id": 33,
       "options": {
@@ -3620,7 +3723,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 97
+        "y": 105
       },
       "id": 30,
       "options": {
@@ -3816,7 +3919,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 97
+        "y": 105
       },
       "id": 32,
       "options": {
@@ -3903,8 +4006,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -3946,7 +4048,7 @@
         "h": 9,
         "w": 10,
         "x": 14,
-        "y": 98
+        "y": 106
       },
       "id": 40,
       "options": {
@@ -4026,6 +4128,6 @@
   "timezone": "browser",
   "title": "pgTips",
   "uid": "eekl0ndod8vswc",
-  "version": 100,
+  "version": 104,
   "weekStart": ""
 }
