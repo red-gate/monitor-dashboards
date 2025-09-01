@@ -2134,7 +2134,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "SQM-NETCORE-BM2"
+              "options": "SQLMONITOR-BM1"
             },
             "properties": [
               {
@@ -2173,7 +2173,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customMetrics\r\n| where name == \"dotnet.process.cpu.time\"\r\n| where cloud_RoleInstance in (\"SQM-NETCORE-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM2\", \"EC2AMAZ-L4FVIBT\")\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n// We sometimes get multiple values for the same instant - not sure but assuming they should be summed\r\n// Maybe something to do with multiple CPUs or similar?\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),100) // clamp values to avoid too much noise from outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n//\r\n",
+            "query": "customMetrics\r\n| where name == \"dotnet.process.cpu.time\"\r\n| where cloud_RoleInstance in (\"SQM-NETCORE-BM1\", \"SQLMONITOR-TEST\", \"SQLMONITOR-BM1\", \"EC2AMAZ-L4FVIBT\")\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n// We sometimes get multiple values for the same instant - not sure but assuming they should be summed\r\n// Maybe something to do with multiple CPUs or similar?\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),100) // clamp values to avoid too much noise from outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n//\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
             ],
@@ -2474,7 +2474,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "SQM-NETCORE-BM2"
+              "options": "SQLMONITOR-BM1"
             },
             "properties": [
               {
@@ -2513,7 +2513,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customMetrics\r\n//| where name == \"dotnet.thread_pool.work_item.count\"\r\n| where name == \"dotnet.monitor.lock_contentions\"\r\n| where cloud_RoleInstance in (\"SQM-NETCORE-BM1\", \"SQLMONITOR-TEST\", \"SQM-NETCORE-BM2\", \"EC2AMAZ-L4FVIBT\")\r\n//| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n// | take 100 ",
+            "query": "customMetrics\r\n//| where name == \"dotnet.thread_pool.work_item.count\"\r\n| where name == \"dotnet.monitor.lock_contentions\"\r\n| where cloud_RoleInstance in (\"SQM-NETCORE-BM1\", \"SQLMONITOR-TEST\", \"SQLMONITOR-BM1\", \"EC2AMAZ-L4FVIBT\")\r\n//| project timestamp, value, instance=cloud_RoleInstance, customDimensions[\"service.name\"]\r\n| project timestamp, value, valueCount, cloud_RoleInstance, itemId\r\n| summarize val=sum(value) by moment=bin(timestamp, 1s), cloud_RoleInstance//, itemId\r\n| partition by cloud_RoleInstance ( \r\n    sort by moment asc \r\n    | extend delta= min_of(max_of(val - prev(val, 1), 0),500) // clamp to minimize impact of outliers\r\n    )\r\n| project moment, name=cloud_RoleInstance, delta\r\n| order by moment asc\r\n// | take 100 ",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor-otel/providers/Microsoft.Insights/components/monitor-otel"
             ],
@@ -2671,13 +2671,13 @@
     "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Monitor Test environment",
   "uid": "ceec7wig7rytca",
-  "version": 22,
+  "version": 23,
   "weekStart": ""
 }
