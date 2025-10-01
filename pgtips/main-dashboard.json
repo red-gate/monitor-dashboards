@@ -162,7 +162,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 6,
         "x": 12,
         "y": 1
       },
@@ -207,12 +207,205 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "total_postgres_instances"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 45,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.83,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "always",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "let GetMonthName = (monthofyear:int) {\r\n    case(\r\n        monthofyear == 1, \"January\",\r\n        monthofyear == 2, \"February\",\r\n        monthofyear == 3, \"March\",\r\n        monthofyear == 4, \"April\",\r\n        monthofyear == 5, \"May\",\r\n        monthofyear == 6, \"June\",\r\n        monthofyear == 7, \"July\",\r\n        monthofyear == 8, \"August\",\r\n        monthofyear == 9, \"September\",\r\n        monthofyear == 10, \"October\",\r\n        monthofyear == 11, \"November\",\r\n        monthofyear == 12, \"December\",\r\n        \"Invalid Month\" // fallback for values outside 1–12\r\n    )\r\n};\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id, bin(timestamp, startofmonth(timestamp))\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    total_postgres_instances=sum(numPostgresInstances)\r\n    by bin(timestamp, startofmonth(timestamp))\r\n| sort by getmonth(timestamp) asc\r\n    ",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Number of monitored PostgreSQL instances seen each month",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 9
+      },
+      "id": 43,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "firstNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp > $__timeFrom\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    sum(numPostgresInstances)\r\n",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Monitored PostgreSQL Instances (in time window)",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 17
       },
       "id": 7,
       "panels": [],
@@ -283,7 +476,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 18
       },
       "id": 27,
       "options": {
@@ -304,7 +497,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "let mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version(application_Version) > parse_version(\"13.0.15.0\")\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 \r\n        and tostring(customDimensions['baseMonitorIdentifiers']) != \"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"], \",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where timestamp < startofday(now())\r\n| where timestamp > endofday(todatetime(\"${__from:date}\"))\r\n| extend postgresLicenses = toint(customDimensions[\"licensedPostgresEnvironments\"])\r\n| where postgresLicenses > 0\r\n| join kind=inner mappings on $left.user_Id == $right.bmId\r\n| summarize instanceCount = sum(postgresLicenses), customerCount = dcount(webId) by bin(timestamp, 1d)\r\n| extend avgInstancesPerCustomer = todouble(instanceCount)/customerCount\r\n| project timestamp, avgInstancesPerCustomer\r\n| render timechart",
+            "query": "let mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version(application_Version) > parse_version(\"13.0.15.0\")\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 \r\n        and tostring(customDimensions['baseMonitorIdentifiers']) != \"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"], \",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where client_Type != \"SaaS\"\r\n| where timestamp < startofday(now())\r\n| where timestamp > endofday(todatetime(\"${__from:date}\"))\r\n| extend postgresLicenses = toint(customDimensions[\"licensedPostgresEnvironments\"])\r\n| where postgresLicenses > 0\r\n| join kind=inner mappings on $left.user_Id == $right.bmId\r\n| summarize instanceCount = sum(postgresLicenses), customerCount = dcount(webId) by bin(timestamp, 1d)\r\n| extend avgInstancesPerCustomer = todouble(instanceCount)/customerCount\r\n| project timestamp, avgInstancesPerCustomer\r\n| render timechart",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -406,7 +599,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 10
+        "y": 18
       },
       "id": 15,
       "options": {
@@ -427,7 +620,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "let mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version( application_Version) > parse_version(\"13.0.15.0\")\r\n  // the 'baseMonitorIdentifiers' field was added in 13.0.15\r\n  // we could look for earlier versions, but we'd need to build the bmIdList using a range \r\n  // e.g. | extend bmIdList = range(0, toint(customDimensions[\"baseMonitorIdentifiers.length\"]-1),1)\r\n  // we can also check this for belt-and-braces: tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 and tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"],\",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where timestamp < startofday(now())\r\n| where timestamp > endofday(todatetime(\"${__from:date}\"))\r\n| where customDimensions[\"licensedPostgresEnvironments\"]>0\r\n| join kind=inner mappings on $left.user_Id==$right.bmId\r\n| summarize dcount(webId) by bin(timestamp, 1d)\r\n",
+            "query": "let mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version( application_Version) > parse_version(\"13.0.15.0\")\r\n  // the 'baseMonitorIdentifiers' field was added in 13.0.15\r\n  // we could look for earlier versions, but we'd need to build the bmIdList using a range \r\n  // e.g. | extend bmIdList = range(0, toint(customDimensions[\"baseMonitorIdentifiers.length\"]-1),1)\r\n  // we can also check this for belt-and-braces: tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 and tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"],\",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where client_Type != \"SaaS\" // this caused problems with the Web to Bm mappings and showed one BM attached to hundreds of Websites\r\n| where timestamp < startofday(now())\r\n| where timestamp > endofday(todatetime(\"${__from:date}\"))\r\n| where customDimensions[\"licensedPostgresEnvironments\"]>0\r\n| join kind=inner mappings on $left.user_Id==$right.bmId\r\n| summarize dcount(webId) by bin(timestamp, 1d)\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -443,81 +636,6 @@
       ],
       "title": "Installations with at least one licensed Postgres entity",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "fp9e08q4z"
-      },
-      "description": "Count of installations (websites) which are monitoring at least 10 Postgres instances, and more Postgres than SQL Server.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "yellow",
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 10
-      },
-      "id": 25,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.5.2",
-      "targets": [
-        {
-          "azureLogAnalytics": {
-            "dashboardTime": false,
-            "query": "// number of installs with majority postgres\r\nlet mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version( application_Version) > parse_version(\"13.0.15.0\")\r\n  // the 'baseMonitorIdentifiers' field was added in 13.0.15\r\n  // we could look for earlier versions, but we'd need to build the bmIdList using a range \r\n  // e.g. | extend bmIdList = range(0, toint(customDimensions[\"baseMonitorIdentifiers.length\"]-1),1)\r\n  // we can also check this for belt-and-braces: tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 and tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"],\",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where timestamp<startofday(now())\r\n| extend postgres=toint(customDimensions[\"postgresInstances\"])\r\n| extend sqlCount=toint(customDimensions[\"sqlServers\"])\r\n| where postgres>9\r\n| summarize arg_max(timestamp, *) by user_Id, day=bin(timestamp, 1d)\r\n| join kind=inner mappings on $left.user_Id==$right.bmId\r\n| summarize totalPg = sum(postgres), totalSql=sum(sqlCount) by webId, day\r\n| extend fractionPg = iff(totalSql==0, 1.0, todouble(totalPg)/todouble(totalPg+totalSql))\r\n| where fractionPg > 0.5\r\n| summarize count() by day\r\n| order by day asc\r\n//| order by fractionPg desc\r\n",
-            "resources": [
-              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
-            ],
-            "resultFormat": "logs"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "fp9e08q4z"
-          },
-          "queryType": "Azure Log Analytics",
-          "refId": "A"
-        }
-      ],
-      "title": "Installations with majority PostgreSQL Entities",
-      "type": "stat"
     },
     {
       "datasource": {
@@ -602,7 +720,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 26
       },
       "id": 41,
       "options": {
@@ -641,12 +759,87 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "Count of installations (websites) which are monitoring at least 10 Postgres instances, and more Postgres than SQL Server.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 26
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "// number of installs with majority postgres\r\nlet mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version( application_Version) > parse_version(\"13.0.15.0\")\r\n  // the 'baseMonitorIdentifiers' field was added in 13.0.15\r\n  // we could look for earlier versions, but we'd need to build the bmIdList using a range \r\n  // e.g. | extend bmIdList = range(0, toint(customDimensions[\"baseMonitorIdentifiers.length\"]-1),1)\r\n  // we can also check this for belt-and-braces: tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 and tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"],\",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where timestamp<startofday(now())\r\n| extend postgres=toint(customDimensions[\"postgresInstances\"])\r\n| extend sqlCount=toint(customDimensions[\"sqlServers\"])\r\n| where postgres>9\r\n| summarize arg_max(timestamp, *) by user_Id, day=bin(timestamp, 1d)\r\n| join kind=inner mappings on $left.user_Id==$right.bmId\r\n| summarize totalPg = sum(postgres), totalSql=sum(sqlCount) by webId, day\r\n| extend fractionPg = iff(totalSql==0, 1.0, todouble(totalPg)/todouble(totalPg+totalSql))\r\n| where fractionPg > 0.5\r\n| summarize count() by day\r\n| order by day asc\r\n//| order by fractionPg desc\r\n",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+            ],
+            "resultFormat": "logs"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Installations with majority PostgreSQL Entities",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 34
       },
       "id": 5,
       "panels": [],
@@ -702,7 +895,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -748,7 +942,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 27
+        "y": 35
       },
       "id": 4,
       "options": {
@@ -835,7 +1029,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -911,7 +1106,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 27
+        "y": 35
       },
       "id": 35,
       "options": {
@@ -1006,7 +1201,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1021,7 +1217,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 27
+        "y": 35
       },
       "id": 3,
       "options": {
@@ -1116,7 +1312,7 @@
         "h": 10,
         "w": 5,
         "x": 0,
-        "y": 35
+        "y": 43
       },
       "id": 20,
       "options": {
@@ -1252,7 +1448,7 @@
         "h": 10,
         "w": 5,
         "x": 5,
-        "y": 35
+        "y": 43
       },
       "id": 11,
       "options": {
@@ -1352,7 +1548,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1422,7 +1619,7 @@
         "h": 10,
         "w": 14,
         "x": 10,
-        "y": 35
+        "y": 43
       },
       "id": 13,
       "options": {
@@ -1540,7 +1737,7 @@
         "h": 10,
         "w": 8,
         "x": 0,
-        "y": 45
+        "y": 53
       },
       "id": 22,
       "options": {
@@ -1710,7 +1907,7 @@
         "h": 10,
         "w": 8,
         "x": 8,
-        "y": 45
+        "y": 53
       },
       "id": 12,
       "options": {
@@ -1867,7 +2064,7 @@
         "h": 10,
         "w": 8,
         "x": 16,
-        "y": 45
+        "y": 53
       },
       "id": 26,
       "options": {
@@ -1981,7 +2178,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 55
+        "y": 63
       },
       "id": 37,
       "options": {
@@ -2138,7 +2335,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 55
+        "y": 63
       },
       "id": 38,
       "options": {
@@ -2182,7 +2379,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 63
+        "y": 71
       },
       "id": 14,
       "panels": [],
@@ -2255,7 +2452,7 @@
         "h": 14,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 72
       },
       "id": 1,
       "options": {
@@ -2387,7 +2584,7 @@
         "h": 14,
         "w": 12,
         "x": 12,
-        "y": 64
+        "y": 72
       },
       "id": 9,
       "options": {
@@ -2459,7 +2656,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 78
+        "y": 86
       },
       "id": 19,
       "panels": [],
@@ -2598,7 +2795,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 79
+        "y": 87
       },
       "id": 23,
       "options": {
@@ -2694,7 +2891,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 79
+        "y": 87
       },
       "id": 16,
       "options": {
@@ -2804,7 +3001,7 @@
         "h": 8,
         "w": 7,
         "x": 12,
-        "y": 79
+        "y": 87
       },
       "id": 17,
       "options": {
@@ -2898,7 +3095,7 @@
         "h": 8,
         "w": 5,
         "x": 19,
-        "y": 79
+        "y": 87
       },
       "id": 18,
       "options": {
@@ -3008,7 +3205,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 87
+        "y": 95
       },
       "id": 24,
       "options": {
@@ -3121,7 +3318,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 87
+        "y": 95
       },
       "id": 36,
       "options": {
@@ -3253,7 +3450,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 87
+        "y": 95
       },
       "id": 39,
       "options": {
@@ -3297,7 +3494,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 95
+        "y": 103
       },
       "id": 29,
       "panels": [],
@@ -3369,7 +3566,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 96
+        "y": 104
       },
       "id": 28,
       "options": {
@@ -3484,7 +3681,7 @@
         "h": 9,
         "w": 7,
         "x": 7,
-        "y": 96
+        "y": 104
       },
       "id": 31,
       "options": {
@@ -3599,7 +3796,7 @@
         "h": 10,
         "w": 10,
         "x": 14,
-        "y": 96
+        "y": 104
       },
       "id": 33,
       "options": {
@@ -3723,7 +3920,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 105
+        "y": 113
       },
       "id": 30,
       "options": {
@@ -3919,7 +4116,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 105
+        "y": 113
       },
       "id": 32,
       "options": {
@@ -4048,7 +4245,7 @@
         "h": 9,
         "w": 10,
         "x": 14,
-        "y": 106
+        "y": 114
       },
       "id": 40,
       "options": {
@@ -4128,6 +4325,6 @@
   "timezone": "browser",
   "title": "pgTips",
   "uid": "eekl0ndod8vswc",
-  "version": 104,
+  "version": 113,
   "weekStart": ""
 }
