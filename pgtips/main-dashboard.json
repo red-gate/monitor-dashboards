@@ -51,177 +51,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 1
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.5.2",
-      "targets": [
-        {
-          "azureLogAnalytics": {
-            "dashboardTime": false,
-            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp < endofday(ago(1d))\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id, bin(timestamp, 1d)\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    total_postgres_instances=sum(numPostgresInstances),\r\n    base_monitor_count=dcount(user_Id)\r\n    by bin(timestamp, 1d)\r\n//| render timechart\r\n",
-            "resources": [
-              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
-            ],
-            "resultFormat": "time_series"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "fp9e08q4z"
-          },
-          "queryType": "Azure Log Analytics",
-          "refId": "A"
-        }
-      ],
-      "title": "Number of monitored PostgreSQL instances and base monitors with a PostgreSQL instance",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "fp9e08q4z"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 1
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "firstNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.5.2",
-      "targets": [
-        {
-          "azureLogAnalytics": {
-            "dashboardTime": false,
-            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp < endofday(ago(1d))\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id, bin(timestamp, 1d)\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    sum(numPostgresInstances)//,\r\n//    base_monitor_count=dcount(user_Id)\r\n    by day=bin(timestamp, 1d)\r\n| order by day\r\n//| render timechart\r\n",
-            "resources": [
-              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
-            ],
-            "resultFormat": "time_series"
-          },
-          "datasource": {
-            "type": "grafana-azure-monitor-datasource",
-            "uid": "fp9e08q4z"
-          },
-          "queryType": "Azure Log Analytics",
-          "refId": "A"
-        }
-      ],
-      "title": "Monitored PostgreSQL Instances",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-azure-monitor-datasource",
-        "uid": "fp9e08q4z"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
             "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
@@ -283,7 +112,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 9
+        "y": 1
       },
       "id": 45,
       "options": {
@@ -357,7 +186,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 9
+        "y": 1
       },
       "id": 43,
       "options": {
@@ -405,7 +234,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 9
       },
       "id": 7,
       "panels": [],
@@ -476,7 +305,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 10
       },
       "id": 27,
       "options": {
@@ -519,6 +348,7 @@
         "type": "grafana-azure-monitor-datasource",
         "uid": "fp9e08q4z"
       },
+      "description": "Installations with at least one licensed Postgres entity",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -599,7 +429,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 18
+        "y": 10
       },
       "id": 15,
       "options": {
@@ -634,7 +464,7 @@
           "refId": "A"
         }
       ],
-      "title": "Installations with at least one licensed Postgres entity",
+      "title": "Postgres customers",
       "type": "timeseries"
     },
     {
@@ -642,7 +472,7 @@
         "type": "grafana-azure-monitor-datasource",
         "uid": "fp9e08q4z"
       },
-      "description": "DAU / MAU. Activity Engagement using Azure's built-in function for UserIds over a rolling 30d window. ",
+      "description": "For complete months. Distinct users per working day (mon-fri) : total for month and average per day across the month. ",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -675,13 +505,12 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
-          "displayName": "${__field.labels.version}",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -695,22 +524,22 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "percentunit"
+          }
         },
         "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "activity_ratio"
+              "options": "stickiness"
             },
             "properties": [
               {
-                "id": "color",
-                "value": {
-                  "fixedColor": "semi-dark-orange",
-                  "mode": "fixed"
-                }
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
               }
             ]
           }
@@ -720,9 +549,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 18
       },
-      "id": 41,
+      "id": 47,
       "options": {
         "legend": {
           "calcs": [],
@@ -741,11 +570,12 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customEvents\r\n| where name == \"serveroverview.viewed\"\r\n| where customDimensions !has \"payload.DeveloperMode\"\r\n| where customDimensions[\"payload.serverType\"]==\"PostgresServer\"\r\n| where timestamp > ago(90d)\r\n| evaluate activity_engagement(user_Id, timestamp, ago(90d), ago(1d), 1d, 30d)\r\n| project timestamp, activity_ratio\r\n| where timestamp > ago(60d)\r\n| order by timestamp asc",
+            "query": "// weekday stickiness\r\nlet monthlyUsers = customEvents\r\n| where name == \"serveroverview.viewed\"\r\n| where customDimensions !has \"payload.DeveloperMode\"\r\n| where customDimensions[\"payload.serverType\"]==\"PostgresServer\"\r\n| where timestamp > startofmonth(ago(365d)) and timestamp < startofmonth(now())\r\n| extend dayOfWeek = toint(dayofweek(timestamp)/1d)\r\n| where dayOfWeek !in (0,6) // exclude weekends\r\n| summarize totalUsersPerMonth = dcount(user_Id) by month = startofmonth(timestamp);\r\ncustomEvents\r\n| where name == \"serveroverview.viewed\"\r\n| where customDimensions !has \"payload.DeveloperMode\"\r\n| where customDimensions[\"payload.serverType\"]==\"PostgresServer\"\r\n| where timestamp > startofmonth(ago(365d)) and timestamp < startofmonth(now())\r\n| extend dayOfWeek = toint(dayofweek(timestamp)/1d)\r\n| where dayOfWeek !in (0,6) // exclude weekends\r\n| summarize usersPerDay= dcount(user_Id) by day = startofday(timestamp)\r\n| summarize avgUsersPerDay = avg(usersPerDay)by month =startofmonth(day)\r\n| join kind=inner monthlyUsers on $left.month==$right.month\r\n| project month, avgUsersPerDay, totalUsersPerMonth, stickiness=(avgUsersPerDay/totalUsersPerMonth)\r\n| order by month asc",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/RG-Insights-Production/providers/microsoft.insights/components/RG-Insights-Production"
             ],
-            "resultFormat": "time_series"
+            "resultFormat": "logs",
+            "timeColumn": "timestamp"
           },
           "datasource": {
             "type": "grafana-azure-monitor-datasource",
@@ -755,7 +585,8 @@
           "refId": "A"
         }
       ],
-      "title": "Stickiness ",
+      "timeFrom": "now-1y",
+      "title": "Users and Stickiness",
       "type": "timeseries"
     },
     {
@@ -763,7 +594,7 @@
         "type": "grafana-azure-monitor-datasource",
         "uid": "fp9e08q4z"
       },
-      "description": "Count of installations (websites) which are monitoring at least 10 Postgres instances, and more Postgres than SQL Server.",
+      "description": "Count of installations (websites) which are monitoring at least 8 Postgres instances, and more Postgres than SQL Server.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -791,7 +622,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 26
+        "y": 18
       },
       "id": 25,
       "options": {
@@ -816,7 +647,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "// number of installs with majority postgres\r\nlet mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version( application_Version) > parse_version(\"13.0.15.0\")\r\n  // the 'baseMonitorIdentifiers' field was added in 13.0.15\r\n  // we could look for earlier versions, but we'd need to build the bmIdList using a range \r\n  // e.g. | extend bmIdList = range(0, toint(customDimensions[\"baseMonitorIdentifiers.length\"]-1),1)\r\n  // we can also check this for belt-and-braces: tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 and tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"],\",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where timestamp<startofday(now())\r\n| extend postgres=toint(customDimensions[\"postgresInstances\"])\r\n| extend sqlCount=toint(customDimensions[\"sqlServers\"])\r\n| where postgres>9\r\n| summarize arg_max(timestamp, *) by user_Id, day=bin(timestamp, 1d)\r\n| join kind=inner mappings on $left.user_Id==$right.bmId\r\n| summarize totalPg = sum(postgres), totalSql=sum(sqlCount) by webId, day\r\n| extend fractionPg = iff(totalSql==0, 1.0, todouble(totalPg)/todouble(totalPg+totalSql))\r\n| where fractionPg > 0.5\r\n| summarize count() by day\r\n| order by day asc\r\n//| order by fractionPg desc\r\n",
+            "query": "// number of installs with majority postgres\r\nlet mappings = customEvents\r\n  | where name == 'monitorinstallation.identifiers'\r\n  | where customDimensions !has 'DeveloperMode'\r\n  | where parse_version( application_Version) > parse_version(\"13.0.15.0\")\r\n  // the 'baseMonitorIdentifiers' field was added in 13.0.15\r\n  // we could look for earlier versions, but we'd need to build the bmIdList using a range \r\n  // e.g. | extend bmIdList = range(0, toint(customDimensions[\"baseMonitorIdentifiers.length\"]-1),1)\r\n  // we can also check this for belt-and-braces: tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | where toint(customDimensions[\"baseMonitorIdentifiers.length\"]) > 0 and tostring(customDimensions['baseMonitorIdentifiers'])!=\"\"\r\n  | extend bmIdList = split(customDimensions[\"baseMonitorIdentifiers\"],\",\")\r\n  | mv-expand bmIdList \r\n  | project webId = user_Id, bmId = tostring(bmIdList)\r\n  | distinct webId, bmId;\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions !has \"DeveloperMode\"\r\n| where timestamp<startofday(now())\r\n| extend postgres=toint(customDimensions[\"postgresInstances\"])\r\n| extend sqlCount=toint(customDimensions[\"sqlServers\"])\r\n| where postgres>7\r\n| summarize arg_max(timestamp, *) by user_Id, day=bin(timestamp, 1d)\r\n| join kind=inner mappings on $left.user_Id==$right.bmId\r\n| summarize totalPg = sum(postgres), totalSql=sum(sqlCount) by webId, day\r\n| extend fractionPg = iff(totalSql==0, 1.0, todouble(totalPg)/todouble(totalPg+totalSql))\r\n| where fractionPg > 0.5\r\n| summarize count() by day\r\n| order by day asc\r\n//| order by fractionPg desc\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -830,7 +661,7 @@
           "refId": "A"
         }
       ],
-      "title": "Installations with majority PostgreSQL Entities",
+      "title": "Pure/Native PostgreSQL Customers",
       "type": "stat"
     },
     {
@@ -839,7 +670,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 26
       },
       "id": 5,
       "panels": [],
@@ -942,7 +773,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 35
+        "y": 27
       },
       "id": 4,
       "options": {
@@ -1106,7 +937,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 35
+        "y": 27
       },
       "id": 35,
       "options": {
@@ -1217,7 +1048,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 35
+        "y": 27
       },
       "id": 3,
       "options": {
@@ -1312,7 +1143,7 @@
         "h": 10,
         "w": 5,
         "x": 0,
-        "y": 43
+        "y": 35
       },
       "id": 20,
       "options": {
@@ -1448,7 +1279,7 @@
         "h": 10,
         "w": 5,
         "x": 5,
-        "y": 43
+        "y": 35
       },
       "id": 11,
       "options": {
@@ -1619,7 +1450,7 @@
         "h": 10,
         "w": 14,
         "x": 10,
-        "y": 43
+        "y": 35
       },
       "id": 13,
       "options": {
@@ -1695,7 +1526,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1737,7 +1569,7 @@
         "h": 10,
         "w": 8,
         "x": 0,
-        "y": 53
+        "y": 45
       },
       "id": 22,
       "options": {
@@ -1846,7 +1678,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1907,7 +1740,7 @@
         "h": 10,
         "w": 8,
         "x": 8,
-        "y": 53
+        "y": 45
       },
       "id": 12,
       "options": {
@@ -2003,7 +1836,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2064,7 +1898,7 @@
         "h": 10,
         "w": 8,
         "x": 16,
-        "y": 53
+        "y": 45
       },
       "id": 26,
       "options": {
@@ -2147,7 +1981,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2178,7 +2013,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 55
       },
       "id": 37,
       "options": {
@@ -2274,7 +2109,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2335,7 +2171,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 63
+        "y": 55
       },
       "id": 38,
       "options": {
@@ -2379,7 +2215,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 71
+        "y": 63
       },
       "id": 14,
       "panels": [],
@@ -2436,7 +2272,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2452,7 +2289,7 @@
         "h": 14,
         "w": 12,
         "x": 0,
-        "y": 72
+        "y": 64
       },
       "id": 1,
       "options": {
@@ -2568,7 +2405,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2584,7 +2422,7 @@
         "h": 14,
         "w": 12,
         "x": 12,
-        "y": 72
+        "y": 64
       },
       "id": 9,
       "options": {
@@ -2656,7 +2494,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 86
+        "y": 78
       },
       "id": 19,
       "panels": [],
@@ -2795,7 +2633,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 87
+        "y": 79
       },
       "id": 23,
       "options": {
@@ -2856,7 +2694,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2891,7 +2730,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 87
+        "y": 79
       },
       "id": 16,
       "options": {
@@ -2970,7 +2809,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3001,7 +2841,7 @@
         "h": 8,
         "w": 7,
         "x": 12,
-        "y": 87
+        "y": 79
       },
       "id": 17,
       "options": {
@@ -3064,7 +2904,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3095,7 +2936,7 @@
         "h": 8,
         "w": 5,
         "x": 19,
-        "y": 87
+        "y": 79
       },
       "id": 18,
       "options": {
@@ -3174,7 +3015,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3205,7 +3047,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 95
+        "y": 87
       },
       "id": 24,
       "options": {
@@ -3303,7 +3145,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3318,7 +3161,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 95
+        "y": 87
       },
       "id": 36,
       "options": {
@@ -3406,7 +3249,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3450,7 +3294,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 95
+        "y": 87
       },
       "id": 39,
       "options": {
@@ -3494,7 +3338,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 103
+        "y": 95
       },
       "id": 29,
       "panels": [],
@@ -3566,7 +3410,7 @@
         "h": 9,
         "w": 7,
         "x": 0,
-        "y": 104
+        "y": 96
       },
       "id": 28,
       "options": {
@@ -3681,7 +3525,7 @@
         "h": 9,
         "w": 7,
         "x": 7,
-        "y": 104
+        "y": 96
       },
       "id": 31,
       "options": {
@@ -3769,7 +3613,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -3796,7 +3641,7 @@
         "h": 10,
         "w": 10,
         "x": 14,
-        "y": 104
+        "y": 96
       },
       "id": 33,
       "options": {
@@ -3920,7 +3765,7 @@
         "h": 10,
         "w": 7,
         "x": 0,
-        "y": 113
+        "y": 105
       },
       "id": 30,
       "options": {
@@ -4116,7 +3961,7 @@
         "h": 10,
         "w": 7,
         "x": 7,
-        "y": 113
+        "y": 105
       },
       "id": 32,
       "options": {
@@ -4203,7 +4048,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -4245,7 +4091,7 @@
         "h": 9,
         "w": 10,
         "x": 14,
-        "y": 114
+        "y": 106
       },
       "id": 40,
       "options": {
@@ -4304,6 +4150,311 @@
         }
       ],
       "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 115
+      },
+      "id": 46,
+      "panels": [],
+      "title": "Archived",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 116
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp < endofday(ago(1d))\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id, bin(timestamp, 1d)\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    total_postgres_instances=sum(numPostgresInstances),\r\n    base_monitor_count=dcount(user_Id)\r\n    by bin(timestamp, 1d)\r\n//| render timechart\r\n",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Number of monitored PostgreSQL instances and base monitors with a PostgreSQL instance",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 116
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "firstNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp < endofday(ago(1d))\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id, bin(timestamp, 1d)\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    sum(numPostgresInstances)//,\r\n//    base_monitor_count=dcount(user_Id)\r\n    by day=bin(timestamp, 1d)\r\n| order by day\r\n//| render timechart\r\n",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Monitored PostgreSQL Instances",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-azure-monitor-datasource",
+        "uid": "fp9e08q4z"
+      },
+      "description": "DAU / MAU. Activity Engagement using Azure's built-in function for UserIds over a rolling 30d window. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "${__field.labels.version}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "activity_ratio"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 124
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "azureLogAnalytics": {
+            "dashboardTime": false,
+            "query": "customEvents\r\n| where name == \"serveroverview.viewed\"\r\n| where customDimensions !has \"payload.DeveloperMode\"\r\n| where customDimensions[\"payload.serverType\"]==\"PostgresServer\"\r\n| where timestamp > ago(90d)\r\n| evaluate activity_engagement(user_Id, timestamp, ago(90d), ago(1d), 1d, 30d)\r\n| project timestamp, activity_ratio\r\n| where timestamp > ago(60d)\r\n| order by timestamp asc",
+            "resources": [
+              "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/RG-Insights-Production/providers/microsoft.insights/components/RG-Insights-Production"
+            ],
+            "resultFormat": "time_series"
+          },
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "queryType": "Azure Log Analytics",
+          "refId": "A"
+        }
+      ],
+      "title": "Stickiness ",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -4325,6 +4476,6 @@
   "timezone": "browser",
   "title": "pgTips",
   "uid": "eekl0ndod8vswc",
-  "version": 113,
+  "version": 118,
   "weekStart": ""
 }
