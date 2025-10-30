@@ -128,7 +128,7 @@
         },
         "orientation": "auto",
         "showValue": "always",
-        "stacking": "none",
+        "stacking": "normal",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
@@ -142,7 +142,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "let GetMonthName = (monthofyear:int) {\r\n    case(\r\n        monthofyear == 1, \"January\",\r\n        monthofyear == 2, \"February\",\r\n        monthofyear == 3, \"March\",\r\n        monthofyear == 4, \"April\",\r\n        monthofyear == 5, \"May\",\r\n        monthofyear == 6, \"June\",\r\n        monthofyear == 7, \"July\",\r\n        monthofyear == 8, \"August\",\r\n        monthofyear == 9, \"September\",\r\n        monthofyear == 10, \"October\",\r\n        monthofyear == 11, \"November\",\r\n        monthofyear == 12, \"December\",\r\n        \"Invalid Month\" // fallback for values outside 1–12\r\n    )\r\n};\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id, bin(timestamp, startofmonth(timestamp))\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    total_postgres_instances=sum(numPostgresInstances)\r\n    by bin(timestamp, startofmonth(timestamp))\r\n| sort by getmonth(timestamp) asc\r\n    ",
+            "query": "let GetMonthName = (monthofyear:int) {\r\n    case(\r\n        monthofyear == 1, \"January\",\r\n        monthofyear == 2, \"February\",\r\n        monthofyear == 3, \"March\",\r\n        monthofyear == 4, \"April\",\r\n        monthofyear == 5, \"May\",\r\n        monthofyear == 6, \"June\",\r\n        monthofyear == 7, \"July\",\r\n        monthofyear == 8, \"August\",\r\n        monthofyear == 9, \"September\",\r\n        monthofyear == 10, \"October\",\r\n        monthofyear == 11, \"November\",\r\n        monthofyear == 12, \"December\",\r\n        \"Invalid Month\" // fallback for values outside 1–12\r\n    )\r\n};\r\ncustomEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"]), isSaas=tobool(client_Type == \"SaaS\")) by user_Id, bin(timestamp, startofmonth(timestamp))\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    total_postgres_instances=sumif(numPostgresInstances, isSaas == false),\r\n    total_postgres_instances_saas=sumif(numPostgresInstances, isSaas)\r\n    by bin(timestamp, startofmonth(timestamp))\r\n| sort by getmonth(timestamp) asc\r\n    ",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -180,7 +180,32 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sumif_numPostgresInstances"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "On Prem"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sumif_numPostgresInstances1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SaaS"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -203,7 +228,7 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "value",
+        "textMode": "value_and_name",
         "wideLayout": true
       },
       "pluginVersion": "11.5.2",
@@ -211,7 +236,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp > $__timeFrom\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"])) by user_Id\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    sum(numPostgresInstances)\r\n",
+            "query": "customEvents\r\n| where name == \"monitoredentities.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where timestamp > $__timeFrom\r\n| summarize arg_max(timestamp, numPostgresInstances=toint(customDimensions[\"postgresInstances\"]), isSaas=tobool(client_Type == \"SaaS\")) by user_Id\r\n| where numPostgresInstances > 0\r\n| summarize\r\n    sumif(numPostgresInstances, isSaas == false),\r\n    sumif(numPostgresInstances, isSaas)",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -484,6 +509,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2227,7 +2253,7 @@
         "type": "grafana-azure-monitor-datasource",
         "uid": "fp9e08q4z"
       },
-      "description": "Something seems wonky with this display? Why isn't 11.0 showing on most columns?!?",
+      "description": "Session count for base monitors monitoring Postgres, by version",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2315,7 +2341,7 @@
           },
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customEvents\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where name == \"monitoredentities.versions\"\r\n| where customDimensions['entityType'] == 'PostgresInstance'\r\n| where timestamp < endofday( ago(1d) )\r\n| extend major = tostring(split(application_Version, \".\")[0])\r\n| extend minor = tostring(split(application_Version, \".\")[1])\r\n| extend build = tostring(split(application_Version, \".\")[2])\r\n| extend minorX = case(strlen(minor) == 1, strcat(\"0\", minor), minor)\r\n| extend buildX = case(strlen(build) == 1, strcat(\"0\", build), build)\r\n| extend majorMinor = strcat(major, \".\", minorX, \".\", buildX)\r\n| extend ver = case(major==11, \"11.x\",\r\n                    major==12, \"12.x\",\r\n                    (major==13 and toint(build)<=40), \"13.00.40 or lower\",\r\n                    major==13, \"13.00.41 or higher\",\r\n                    (major==14 and toint(build)<=10), \"14.00.10 or lower\",\r\n                    (major==14 and toint(build)<=39), \"14.00.39 or lower\",\r\n                    majorMinor)\r\n| summarize sessions=dcount(session_Id) by day=bin(timestamp, 1d), ver \r\n| order by day asc\r\n// | order by ver desc\r\n//| render stackedArea\r\n\r\n",
+            "query": "customEvents\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where name == \"monitoredentities.versions\"\r\n| where customDimensions['entityType'] == 'PostgresInstance'\r\n| where timestamp < endofday( ago(1d) )\r\n| extend major = tostring(split(application_Version, \".\")[0])\r\n| extend minor = tostring(split(application_Version, \".\")[1])\r\n| extend build = tostring(split(application_Version, \".\")[2])\r\n| extend minorX = case(strlen(minor) == 1, strcat(\"0\", minor), minor)\r\n| extend buildX = case(strlen(build) == 1, strcat(\"0\", build), build)\r\n| extend majorMinor = strcat(major, \".\", minorX, \".\", buildX)\r\n| extend ver = case(major==11, \"11.x\",\r\n                    major==12, \"12.x\",\r\n                    (major==13 and toint(build)<=40), \"13.00.40 or lower\",\r\n                    major==13, \"13.00.41 or higher\",\r\n                    (major==14 and minor==0 and toint(build)<=10), \"14.00.10 or lower\",\r\n                    (major==14 and minor==0 and toint(build)<=39), \"14.00.39 or lower\",\r\n                    majorMinor)\r\n| summarize sessions=dcount(session_Id) by day=bin(timestamp, 1d), ver \r\n| order by day asc\r\n// | order by ver desc\r\n//| render stackedArea\r\n\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -2448,7 +2474,7 @@
           },
           "azureLogAnalytics": {
             "dashboardTime": false,
-            "query": "customEvents\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where name == \"monitoredentities.versions\"\r\n| where customDimensions['entityType'] == 'PostgresInstance'\r\n| where timestamp < endofday(ago(1d))\r\n| extend major = tostring(split(application_Version, \".\")[0])\r\n| extend minor = tostring(split(application_Version, \".\")[1])\r\n| extend build = tostring(split(application_Version, \".\")[2])\r\n| extend minorX = case(strlen(minor) == 1, strcat(\"0\", minor), minor)\r\n| extend buildX = case(strlen(build) == 1, strcat(\"0\", build), build)\r\n| extend majorMinor = strcat(major, \".\", minorX, \".\", buildX)\r\n| extend ibuild = toint(build)\r\n| where toint(major) > 12\r\n| extend ver = case(\r\n                   (major == 13 and ibuild < 10),\r\n                   \"13.0.00 PostgreSQL Linux and RDS\",\r\n                   (major == 13 and ibuild < 15),\r\n                   \"13.0.10 First alerts\",\r\n                   (major == 13 and ibuild < 27),\r\n                   \"13.0.15 Replication\",\r\n                   (major == 13 and ibuild < 35),\r\n                   \"13.0.27 Aurora\",\r\n                   (major == 13 and ibuild < 42),\r\n                   \"13.0.35 Postgres 16\",\r\n                   (major == 13 and ibuild < 43),\r\n                   \"13.0.42 Configuration\",\r\n                   (major == 13 and ibuild < 44),\r\n                   \"13.0.43 Autovacuum\",\r\n                   (major == 13 and ibuild < 53),\r\n                   \"13.0.44 Recommendations\",\r\n                   (major == 13) or (major == 14 and ibuild < 4),\r\n                   \"13.0.53 More alerts\",\r\n                   (major == 14 and ibuild < 5),\r\n                   \"14.0.04 Queryplan Changes\",\r\n                   (major == 14 and ibuild < 10),\r\n                   \"14.0.05 IAM support\",\r\n                   (major == 14 and ibuild < 27),\r\n                   \"14.0.10 Current Activity\",\r\n                   (major == 14 and ibuild < 30),\r\n                   \"14.0.27 Low cache hit ratio\",\r\n                   (major == 14 and ibuild < 32),\r\n                   \"14.0.30 Postgres 17\",\r\n                   (major == 14 and ibuild < 34),\r\n                   \"14.0.32 NFS\",\r\n                   (major == 14 and ibuild < 39),\r\n                   \"14.0.34 Azure Flex\",\r\n                   (major == 14 and ibuild < 40),\r\n                   \"14.0.39 Entra Powershell\",\r\n                   (major == 14 and ibuild < 42),\r\n                   \"14.0.40 Flex Query Plans & Entra ID\",\r\n                   (major == 14 and ibuild < 56),\r\n                   \"14.0.42 Log Entry Alerts\",\r\n                   (major == 14 and ibuild < 58),\r\n                   \"14.0.56 Indexes FUR\",\r\n                   (major == 14 and ibuild < 66),\r\n                   \"14.0.58 Databases Tab\",\r\n                   (major == 14 and ibuild < 67),\r\n                   \"14.0.66 Index Monitoring\",\r\n                   (major == 14 and ibuild < 68),\"14.0.67 Index CTA and Sentiment\",\r\n                   (major == 14 and ibuild < 71), \"14.0.68 Test Add Server pt1\",\r\n                   (major == 14 and ibuild < 73), \"14.0.71 Missing TQ, QP diag\",\r\n                   \"14.0.73 diagnose & test FUR\"\r\n               ) \r\n| summarize sessions=dcount(session_Id) by bin(timestamp, 1d), ver \r\n| order by timestamp asc, ver\r\n\r\n",
+            "query": "customEvents\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| where name == \"monitoredentities.versions\"\r\n| where customDimensions['entityType'] == 'PostgresInstance'\r\n| where timestamp < endofday(ago(1d))\r\n| extend major = toint(split(application_Version, \".\")[0])\r\n| extend minor = toint(split(application_Version, \".\")[1])\r\n| extend build = toint(split(application_Version, \".\")[2])\r\n// | extend minorX = case(strlen(minor) == 1, strcat(\"0\", minor), minor)\r\n// | extend buildX = case(strlen(build) == 1, strcat(\"0\", build), build)\r\n// | extend majorMinor = strcat(major, \".\", minorX, \".\", buildX)\r\n| extend ibuild = toint(build)\r\n| where toint(major) > 12\r\n| extend ver = case(\r\n                   (major == 13 and ibuild < 10),\r\n                   \"13.0.00 PostgreSQL Linux and RDS\",\r\n                   (major == 13 and ibuild < 15),\r\n                   \"13.0.10 First alerts\",\r\n                   (major == 13 and ibuild < 27),\r\n                   \"13.0.15 Replication\",\r\n                   (major == 13 and ibuild < 35),\r\n                   \"13.0.27 Aurora\",\r\n                   (major == 13 and ibuild < 42),\r\n                   \"13.0.35 Postgres 16\",\r\n                   (major == 13 and ibuild < 43),\r\n                   \"13.0.42 Configuration\",\r\n                   (major == 13 and ibuild < 44),\r\n                   \"13.0.43 Autovacuum\",\r\n                   (major == 13 and ibuild < 53),\r\n                   \"13.0.44 Recommendations\",\r\n                   (major == 13) or (major == 14 and minor == 0 and ibuild < 4),\r\n                   \"13.0.53 More alerts\",\r\n                   (major == 14 and minor == 0 and ibuild < 5),\r\n                   \"14.0.04 Queryplan Changes\",\r\n                   (major == 14 and minor == 0 and ibuild < 10),\r\n                   \"14.0.05 IAM support\",\r\n                   (major == 14 and minor == 0 and ibuild < 27),\r\n                   \"14.0.10 Current Activity\",\r\n                   (major == 14 and minor == 0 and ibuild < 30),\r\n                   \"14.0.27 Low cache hit ratio\",\r\n                   (major == 14 and minor == 0 and ibuild < 32),\r\n                   \"14.0.30 Postgres 17\",\r\n                   (major == 14 and minor == 0 and ibuild < 34),\r\n                   \"14.0.32 NFS\",\r\n                   (major == 14 and minor == 0 and ibuild < 39),\r\n                   \"14.0.34 Azure Flex\",\r\n                   (major == 14 and minor == 0 and ibuild < 40),\r\n                   \"14.0.39 Entra Powershell\",\r\n                   (major == 14 and minor == 0 and ibuild < 42),\r\n                   \"14.0.40 Flex Query Plans & Entra ID\",\r\n                   (major == 14 and minor == 0 and ibuild < 56),\r\n                   \"14.0.42 Log Entry Alerts\",\r\n                   (major == 14 and minor == 0 and ibuild < 58),\r\n                   \"14.0.56 Indexes FUR\",\r\n                   (major == 14 and minor == 0 and ibuild < 66),\r\n                   \"14.0.58 Databases Tab\",\r\n                   (major == 14 and minor == 0 and ibuild < 67),\r\n                   \"14.0.66 Index Monitoring\",\r\n                   (major == 14 and minor == 0 and ibuild < 68), \"14.0.67 Index CTA and Sentiment\",\r\n                   (major == 14 and minor == 0 and ibuild < 71), \"14.0.68 Test Add Server pt1\",\r\n                   (major == 14 and minor == 0 and ibuild < 73), \"14.0.71 Missing TQ, QP diag\",\r\n                   (major == 14 and (minor == 0 or minor ==1)), \"14.0.73 diagnose & test FUR\",\r\n                   \"14.2.0 custom metrics\"\r\n               )\r\n| summarize sessions=dcount(session_Id) by bin(timestamp, 1d), ver \r\n| order by timestamp asc, ver\r\n\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -4440,7 +4466,7 @@
       },
       "id": 52,
       "panels": [],
-      "title": "Custom metrics (dev mode)",
+      "title": "Custom metrics",
       "type": "row"
     },
     {
@@ -4566,7 +4592,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": true,
-            "query": "customEvents\r\n| where name == \"custommetrics.report\"\r\n| summarize arg_max(timestamp, numPostgresCustomMetrics=toint(customDimensions[\"postgresCustomMetricsCount\"])), \r\narg_max(timestamp, numActive=toint(customDimensions[\"activePostgresMetricsCount\"])),\r\narg_max(timestamp, numNonZeroSample=toint(customDimensions[\"postgresMetricsWithNonZeroSampleTime\"])) by user_Id, bin(timestamp, 1d)  \r\n| where numPostgresCustomMetrics > 0\r\n| summarize\r\n    total_postgres_custom_metrics=sum(numPostgresCustomMetrics),\r\n    total_active=sum(numActive),\r\n    total_sampling=sum(numNonZeroSample)\r\n    by bin(timestamp, 1d)\r\n\r\n",
+            "query": "customEvents\r\n| where name == \"custommetrics.report\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| summarize arg_max(timestamp, numPostgresCustomMetrics=toint(customDimensions[\"postgresCustomMetricsCount\"])), \r\narg_max(timestamp, numActive=toint(customDimensions[\"activePostgresMetricsCount\"])),\r\narg_max(timestamp, numNonZeroSample=toint(customDimensions[\"postgresMetricsWithNonZeroSampleTime\"])) by user_Id, bin(timestamp, 1d)  \r\n| where numPostgresCustomMetrics > 0\r\n| summarize\r\n    total_postgres_custom_metrics=sum(numPostgresCustomMetrics),\r\n    total_active=sum(numActive),\r\n    total_sampling=sum(numNonZeroSample)\r\n    by bin(timestamp, 1d)\r\n\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -4666,7 +4692,7 @@
         {
           "azureLogAnalytics": {
             "dashboardTime": true,
-            "query": "customEvents\r\n| where name == \"custommetrics.newmetriccreated\"\r\n| summarize \r\n    postgres_metrics=count(customDimensions[\"targetEntityType\"] == \"Postgres\"), \r\n    sqlserver_metrics=count(customDimensions[\"targetEntityType\"] == \"SqlServer\")\r\n",
+            "query": "customEvents\r\n| where name == \"custommetrics.newmetriccreated\"\r\n| where customDimensions[\"DeveloperMode\"] != true\r\n| summarize \r\n    postgres_metrics=count(customDimensions[\"targetEntityType\"] == \"Postgres\"), \r\n    sqlserver_metrics=count(customDimensions[\"targetEntityType\"] == \"SqlServer\")\r\n",
             "resources": [
               "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
             ],
@@ -4691,6 +4717,225 @@
         "w": 24,
         "x": 0,
         "y": 135
+      },
+      "id": 54,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "description": "The total number of PostgreSQL tracked queries across all instances for all users.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Total Number of Tracked Queries",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 136
+          },
+          "id": 55,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "azureLogAnalytics": {
+                "dashboardTime": true,
+                "query": "customEvents \r\n| where name == \"serveroverview.trackedqueries.report\" \r\n| extend trackedQueryCount = toint(customDimensions[\"PostgresInstance\"]) \r\n| summarize trackedQueryCount = max(trackedQueryCount) by bin(timestamp, 1d), user_Id, tostring(customDimensions[\"instance\"])\r\n| summarize sum(trackedQueryCount) by bin(timestamp, 1d)\r\n| render timechart",
+                "resources": [
+                  "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+                ],
+                "resultFormat": "time_series",
+                "timeColumn": "timestamp"
+              },
+              "datasource": {
+                "type": "grafana-azure-monitor-datasource",
+                "uid": "fp9e08q4z"
+              },
+              "queryType": "Azure Log Analytics",
+              "refId": "A"
+            }
+          ],
+          "title": "Total Number of PostgreSQL Tracked Queries (includes dev)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-azure-monitor-datasource",
+            "uid": "fp9e08q4z"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Number of queries affected",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 136
+          },
+          "id": 56,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.5.2",
+          "targets": [
+            {
+              "azureLogAnalytics": {
+                "dashboardTime": true,
+                "query": "customEvents\r\n| summarize tracked_queries = countif(name == \"serveroverview.trackedqueries.postgres.track\"), untracked_queries = countif(name == \"serveroverview.trackedqueries.postgres.untrack\") by bin(timestamp, 1d)\r\n| render timechart",
+                "resources": [
+                  "/subscriptions/64865690-933f-4328-9a41-6b2f546777af/resourceGroups/monitor/providers/Microsoft.Insights/components/monitor"
+                ],
+                "resultFormat": "logs",
+                "timeColumn": "timestamp"
+              },
+              "datasource": {
+                "type": "grafana-azure-monitor-datasource",
+                "uid": "fp9e08q4z"
+              },
+              "queryType": "Azure Log Analytics",
+              "refId": "A"
+            }
+          ],
+          "title": "PostgreSQL Tracked Queries - Track vs Untrack (includes dev)",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Polymon",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 136
       },
       "id": 46,
       "panels": [
@@ -4742,8 +4987,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4758,7 +5002,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 175
+            "y": 153
           },
           "id": 2,
           "options": {
@@ -4811,8 +5055,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -4823,7 +5066,7 @@
             "h": 8,
             "w": 6,
             "x": 12,
-            "y": 175
+            "y": 153
           },
           "id": 8,
           "options": {
@@ -4915,8 +5158,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4948,7 +5190,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 183
+            "y": 161
           },
           "id": 41,
           "options": {
@@ -5010,6 +5252,6 @@
   "timezone": "browser",
   "title": "pgTips",
   "uid": "eekl0ndod8vswc",
-  "version": 132,
+  "version": 148,
   "weekStart": ""
 }
