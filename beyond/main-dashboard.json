@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "pgTips dashboard",
+  "description": "Beyond dashboard",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -5801,7 +5801,7 @@
   "refresh": "1d",
   "schemaVersion": 40,
   "tags": [
-    "pgTips",
+    "Beyond",
     "sql-monitor",
     "estate-management"
   ],
@@ -5814,7 +5814,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "pgTips",
+  "title": "Beyond",
   "uid": "eekl0ndod8vswc",
   "version": 163,
   "weekStart": ""
